@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SECURITY MODE</title>
+<title>System Security</title>
 
 <style>
 html, body {
@@ -11,165 +11,138 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background: #000;
-  color: #0f0;
+  background: black;
+  color: #00ff00;
   font-family: monospace;
   overflow: hidden;
 }
 
-.screen {
+#screen {
   position: fixed;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.box {
-  width: 90%;
-  max-width: 500px;
-  border: 2px solid #0f0;
   padding: 20px;
-  text-align: center;
 }
 
 h1 {
   color: red;
-  margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.log {
-  text-align: left;
-  min-height: 160px;
+#log {
   white-space: pre-line;
-  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-.timer {
-  font-size: 24px;
-  color: red;
-  margin-top: 15px;
+#controls {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
 }
 
 input {
-  margin-top: 15px;
-  width: 100%;
-  padding: 12px;
-  background: #000;
-  border: 1px solid #0f0;
-  color: #0f0;
+  padding: 10px;
   font-size: 18px;
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  width: 200px;
   text-align: center;
 }
 
 button {
-  margin-top: 10px;
   padding: 10px 20px;
-  background: #0f0;
-  border: none;
   font-size: 16px;
+  margin-left: 10px;
   cursor: pointer;
 }
 
-.error {
+#error {
   color: red;
-  display: none;
   margin-top: 10px;
+  display: none;
 }
 
-/* تأثير التكبير */
-.big-joke {
-  font-size: 34px;
-  animation: pop 0.6s ease-in-out forwards;
-}
-
-@keyframes pop {
-  0% { transform: scale(0.5); opacity: 0; }
-  70% { transform: scale(1.2); }
-  100% { transform: scale(1); opacity: 1; }
+#countdown {
+  color: red;
+  font-size: 22px;
+  margin-top: 15px;
 }
 </style>
 </head>
 
 <body>
+<div id="screen">
+  <h1>⚠ SYSTEM SECURITY BREACH ⚠</h1>
+  <div id="log"></div>
+  <div id="countdown"></div>
 
-<div class="screen" id="app">
-  <div class="box">
-    <h1>⚠ SYSTEM SECURITY MODE ⚠</h1>
-    <div class="log" id="log"></div>
-    <div class="timer" id="timer"></div>
-
-    <input type="password" id="pass" placeholder="أدخل كلمة السر لإيقاف العملية">
+  <div id="controls">
+    <p>ادخل كلمة السر لإيقاف العملية</p>
+    <input type="password" id="pass" placeholder="Password">
     <button onclick="unlock()">إيقاف</button>
-    <div class="error" id="err">❌ كلمة السر غير صحيحة</div>
+    <div id="error">❌ كلمة السر غير صحيحة</div>
   </div>
 </div>
 
-<audio id="laugh">
-  <source src="https://www.soundjay.com/human/laugh-01.mp3" type="audio/mpeg">
-</audio>
-
 <script>
+// محاولة Fullscreen
+document.documentElement.requestFullscreen?.().catch(()=>{});
+
+// الرسائل بالترتيب
 const steps = [
   "جاري الاتصال بالجهاز...",
-  "جاري التعرف على البيانات...",
-  "جاري فحص الصور...",
-  "جاري فحص الملفات...",
-  "جاري تجهيز عملية الفورمات..."
+  "جاري سحب معلومات النظام...",
+  "جاري سحب الصور...",
+  "جاري سحب الملفات كاملة...",
+  "تحذير: بدء عملية فرمطة الجهاز..."
 ];
 
 let log = document.getElementById("log");
 let i = 0;
 
-// كل خطوة كل 10 ثواني
 function nextStep() {
   if (i < steps.length) {
-    log.textContent += "• " + steps[i] + "\n";
+    log.textContent += steps[i] + "\n";
     i++;
-    setTimeout(nextStep, 10000);
+    setTimeout(nextStep, 1500);
   } else {
     startCountdown();
   }
 }
+
 nextStep();
 
-// عد تنازلي دقيقة واحدة
-let time = 60;
+// العد التنازلي
+let time = 10;
+let timer;
 
 function startCountdown() {
-  const t = document.getElementById("timer");
-  const interval = setInterval(() => {
-    let m = Math.floor(time / 60);
-    let s = time % 60;
-    t.textContent = `⏳ الوقت المتبقي: ${m}:${s < 10 ? "0" + s : s}`;
+  const cd = document.getElementById("countdown");
+  timer = setInterval(() => {
+    cd.textContent = "⏳ فرمطة الجهاز خلال: " + time + " ثواني";
     time--;
-
     if (time < 0) {
-      clearInterval(interval);
-
-      t.textContent = "😂 يعم يهزر معاك روق كده";
-      t.classList.add("big-joke");
-      t.style.color = "#0f0";
-
-      if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200]);
-      }
-
-      document.getElementById("laugh").play();
+      clearInterval(timer);
+      cd.textContent = "❌ فشل إيقاف العملية";
     }
   }, 1000);
 }
 
+// فك القفل
 function unlock() {
   const p = document.getElementById("pass").value;
   if (p === "1234") {
-    document.getElementById("app").style.display = "none";
-    alert("خلصت 😄 مجرد هزار");
+    clearInterval(timer);
+    alert("✅ تم إيقاف العملية بنجاح (مقلب 😄)");
+    document.exitFullscreen?.();
+    location.reload();
   } else {
-    document.getElementById("err").style.display = "block";
+    document.getElementById("error").style.display = "block";
   }
 }
 </script>
-
 </body>
 </html>
