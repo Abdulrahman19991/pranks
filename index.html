@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Security</title>
+<title>SECURITY MODE</title>
 
 <style>
 html, body {
@@ -11,138 +11,138 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background: black;
-  color: #00ff00;
+  background: #000;
+  color: #0f0;
   font-family: monospace;
   overflow: hidden;
 }
 
-#screen {
+.screen {
   position: fixed;
   inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  width: 90%;
+  max-width: 600px;
+  border: 2px solid #0f0;
   padding: 20px;
+  text-align: center;
 }
 
 h1 {
   color: red;
-  text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-#log {
+.log {
+  text-align: left;
+  min-height: 180px;
   white-space: pre-line;
-  font-size: 16px;
-  line-height: 1.6;
+  margin-top: 10px;
 }
 
-#controls {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
+.timer {
+  font-size: 26px;
+  color: red;
+  margin-top: 15px;
 }
 
 input {
-  padding: 10px;
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  background: #000;
+  border: 1px solid #0f0;
+  color: #0f0;
   font-size: 18px;
-  background: black;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  width: 200px;
   text-align: center;
 }
 
 button {
+  margin-top: 10px;
   padding: 10px 20px;
+  background: #0f0;
+  border: none;
   font-size: 16px;
-  margin-left: 10px;
   cursor: pointer;
 }
 
-#error {
+.error {
   color: red;
-  margin-top: 10px;
   display: none;
-}
-
-#countdown {
-  color: red;
-  font-size: 22px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
-<div id="screen">
-  <h1>⚠ SYSTEM SECURITY BREACH ⚠</h1>
-  <div id="log"></div>
-  <div id="countdown"></div>
 
-  <div id="controls">
-    <p>ادخل كلمة السر لإيقاف العملية</p>
-    <input type="password" id="pass" placeholder="Password">
+<div class="screen" id="app">
+  <div class="box">
+    <h1>⚠ SYSTEM SECURITY MODE ⚠</h1>
+    <div class="log" id="log"></div>
+    <div class="timer" id="timer"></div>
+
+    <input type="password" id="pass" placeholder="أدخل كلمة السر لإيقاف العملية">
     <button onclick="unlock()">إيقاف</button>
-    <div id="error">❌ كلمة السر غير صحيحة</div>
+    <div class="error" id="err">❌ كلمة السر غير صحيحة</div>
   </div>
 </div>
 
 <script>
-// محاولة Fullscreen
-document.documentElement.requestFullscreen?.().catch(()=>{});
-
-// الرسائل بالترتيب
 const steps = [
   "جاري الاتصال بالجهاز...",
-  "جاري سحب معلومات النظام...",
-  "جاري سحب الصور...",
-  "جاري سحب الملفات كاملة...",
-  "تحذير: بدء عملية فرمطة الجهاز..."
+  "جاري التعرف على البيانات...",
+  "جاري فحص الصور...",
+  "جاري فحص الملفات...",
+  "جاري تجهيز عملية الفورمات..."
 ];
 
 let log = document.getElementById("log");
 let i = 0;
 
+// كل خطوة كل 10 ثواني
 function nextStep() {
   if (i < steps.length) {
-    log.textContent += steps[i] + "\n";
+    log.textContent += "• " + steps[i] + "\n";
     i++;
-    setTimeout(nextStep, 1500);
+    setTimeout(nextStep, 10000);
   } else {
     startCountdown();
   }
 }
-
 nextStep();
 
-// العد التنازلي
-let time = 10;
-let timer;
-
+// عد تنازلي 3 دقائق
+let time = 180;
 function startCountdown() {
-  const cd = document.getElementById("countdown");
-  timer = setInterval(() => {
-    cd.textContent = "⏳ فرمطة الجهاز خلال: " + time + " ثواني";
+  const t = document.getElementById("timer");
+  const interval = setInterval(() => {
+    let m = Math.floor(time / 60);
+    let s = time % 60;
+    t.textContent = `⏳ الوقت المتبقي: ${m}:${s < 10 ? "0" + s : s}`;
     time--;
     if (time < 0) {
-      clearInterval(timer);
-      cd.textContent = "❌ فشل إيقاف العملية";
+      clearInterval(interval);
+      t.textContent = "يعم بهزر معاك روق كده 😂";
     }
   }, 1000);
 }
 
-// فك القفل
 function unlock() {
   const p = document.getElementById("pass").value;
   if (p === "1234") {
-    clearInterval(timer);
-    alert("✅ تم إيقاف العملية بنجاح (مقلب 😄)");
-    document.exitFullscreen?.();
-    location.reload();
+    document.getElementById("app").style.display = "none";
+    alert("تم إيقاف العملية بنجاح 😄");
   } else {
-    document.getElementById("error").style.display = "block";
+    document.getElementById("err").style.display = "block";
   }
 }
 </script>
+
 </body>
 </html>
