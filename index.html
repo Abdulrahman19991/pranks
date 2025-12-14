@@ -1,35 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>System Scan</title>
-  <style>
-    body{background:#000;color:#0f0;font-family:monospace;padding:20px}
-    #box{max-width:400px;margin:auto;border:1px solid #0f0;padding:15px}
-  </style>
-  <!-- rebuild trigger -->
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECURITY MODE</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    font-family: monospace;
+    color: #0f0;
+  }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .box {
+    width: 90%;
+    max-width: 500px;
+    border: 2px solid #0f0;
+    padding: 20px;
+  }
+  h1 {
+    color: red;
+    margin-bottom: 10px;
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-size: 18px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #0f0;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .error {
+    color: red;
+    margin-top: 10px;
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <div id="box">
-    <h3>Initializing Scan...</h3>
-    <pre id="out"></pre>
+
+<div class="overlay" id="lock">
+  <div class="box">
+    <h1>⚠ SECURITY MODE ENABLED ⚠</h1>
+    <p>تم تقييد الشاشة مؤقتًا</p>
+    <p>اكتب كلمة السر للخروج من هذا الوضع</p>
+    <input type="password" id="pass" placeholder="Enter password">
+    <button onclick="check()">UNLOCK</button>
+    <div class="error" id="err">❌ كلمة السر غير صحيحة</div>
   </div>
-  <script>
-    const lines=[
-      "Connecting to device...",
-      "Reading system headers...",
-      "Detecting OS: Android",
-      "Detecting Browser: Chrome",
-      "Fetching IP address...",
-      "Analyzing network...",
-      "Scan complete."
-    ];
-    let i=0;
-    const out=document.getElementById("out");
-    setInterval(()=>{
-      if(i<lines.length) out.textContent+=lines[i++]+"\\n";
-    },700);
-  </script>
+</div>
+
+<script>
+function check() {
+  const p = document.getElementById("pass").value;
+  if (p === "1234") {
+    document.getElementById("lock").style.display = "none";
+    alert("تم الخروج بنجاح");
+  } else {
+    document.getElementById("err").style.display = "block";
+  }
+}
+</script>
+
 </body>
 </html>
